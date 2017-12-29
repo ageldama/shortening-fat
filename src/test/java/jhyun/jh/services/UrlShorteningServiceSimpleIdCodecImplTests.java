@@ -1,10 +1,8 @@
 package jhyun.jh.services;
 
-import com.github.javafaker.Faker;
 import jhyun.jh.storage.entities.Url;
 import jhyun.jh.storage.repositories.UrlRepository;
 import lombok.val;
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
@@ -14,10 +12,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
+import static jhyun.jh.testing_support.TestingFixtures.generateRandomUrl;
+import static jhyun.jh.testing_support.TestingFixtures.randomInt;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -27,16 +25,6 @@ public class UrlShorteningServiceSimpleIdCodecImplTests {
 
     @InjectMocks
     private UrlShorteningServiceSimpleIdCodecImpl testSubject;
-
-    private int randomInt() {
-        return RandomUtils.nextInt(0, Integer.MAX_VALUE);
-    }
-
-    private Faker faker = new Faker();
-
-    private String generateRandomUrl() {
-        return faker.internet().url();
-    }
 
     @Test
     public void shortenNewOk() {
