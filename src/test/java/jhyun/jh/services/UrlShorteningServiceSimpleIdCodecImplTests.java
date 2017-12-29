@@ -2,6 +2,7 @@ package jhyun.jh.services;
 
 import jhyun.jh.storage.entities.Url;
 import jhyun.jh.storage.repositories.UrlRepository;
+import lombok.val;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +27,7 @@ public class UrlShorteningServiceSimpleIdCodecImplTests {
     }
 
     private String generateRandomUrl() {
-        Faker
+        Faker faker;
         return "";
     }
 
@@ -44,7 +45,7 @@ public class UrlShorteningServiceSimpleIdCodecImplTests {
                 .url(((Url) invocationOnMock.getArgument(0)).getUrl())
                 .build());
         //
-        testSubject.shorten()
+        val shortenedCode = testSubject.shorten(generateRandomUrl());
     }
 
     // TODO: shortenFoundOk
