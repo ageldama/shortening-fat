@@ -8,5 +8,3 @@ CREATE TABLE IF NOT EXISTS shorteningfat.urls (
   shortened_code LONGVARCHAR
 );
 
-INSERT INTO shorteningfat.urls (url) VALUES ('http://google.com'), ('http://foo.com'), ('https://bar.com');
-

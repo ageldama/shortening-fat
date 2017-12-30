@@ -33,7 +33,7 @@ public class IndexController {
 
     @RequestMapping("/")
     public RedirectView index() {
-        return new RedirectView("/index.html");
+        return new RedirectView("/vue-ui.html");
     }
 
     @ApiOperation(value = "POST field `url`으로 주어진 URL을 shortened-code으로 축약해 저장")

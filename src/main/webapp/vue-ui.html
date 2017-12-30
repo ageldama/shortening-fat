@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>shortening-fat</title>
+<style>
+.div_border {
+	border: solid 1px grey;
+}
+</style>
+
+	</head>
+
+	<body>
+		<script src="js/vue.js"></script>
+		<script src="js/fetch.js"></script>
+		<script src="js/lodash.js"></script>
+
+		<a href="/swagger-ui.html">Swagger API Definition</a><br>
+		<hr>
+
+		<div id="app">
+			<mainview></mainview>
+		</div>
+
+<script type='text/x-template' id='post-form-tmpl'>
+	<div class='div_border'>
+		URL: <input type='text' v-model='url' placeholder="축약할 URL"><br>
+		<input type='button' value='축약' v-on:click="shorten_url()"><br>
+	</div>
+</script>
+
+<script type='text/x-template' id='mainview-tmpl'>
+	<div>
+		<post-form></post-form><br>
+		<urls-list></urls-list>
+	</div>
+</script>
+
+<script type='text/x-template' id='urls-list-tmpl'>
+	<div class='div_border'>
+		<h1>Saved URLs</h1>
+
+		<ul>
+            <li  v-if="urls.length == 0">
+                <i>No items</i>
+            </li>
+			<li v-for="it in urls">
+                <a :href="base_url + '/' + it.shortenedCode" target="_blank">
+                    {{it}}
+                </a>
+			</li>
+		</ul>
+		<i>meta = {{page_meta}}</i>
+	
+	</div>
+</script>
+
+<script>
+function base_url() {
+    var get_url = window.location;
+    return get_url .protocol + "//" + get_url.host;
+}
+
+var bus = new Vue();
+
+// <login-panel/>
+var post_form_data = {
+	url: ''
+};
+
+Vue.component('post-form', {
+	template: '#post-form-tmpl',
+	data: function(){
+		return post_form_data;
+	},
+	methods: {
+		shorten_url: function () {
+			var $this = this;
+            var form = new FormData();
+            form.append("url", $this.url);
+			fetch('/urls/shorten', { method: 'POST', body: form })
+				.then(function(response){
+					//console.log(response);
+					return response.text()
+				})
+				.then(function(text){
+                    bus.$emit('refresh-urls-list');
+				});
+		}
+	}
+});
+
+// <urls-list/>
+var urls_list_data = {
+	page: 1,
+	urls: [],
+	page_meta: null,
+    base_url: base_url()
+};
+Vue.component('urls-list', {
+	template: '#urls-list-tmpl',
+	data: function(){
+		return urls_list_data;
+	},
+	methods: {
+		list: function(){
+			var $this = this;
+			this.urls = [];
+			this.page_meta = null;
+			fetch('/urls/list', {
+                method: "GET"
+            })
+            .then(function(response){
+                return response.text();
+            })
+            .then(function(text){
+                var o = JSON.parse(text);
+                //console.log(o);
+                $this.urls = o['content'];
+                $this.page_meta = _.pick(o, ['first', 'last', 'numberOfElements', 'size', 'sort', 'totalElements', 'totalPages']);
+            });
+		}
+	},
+	mounted: function(){
+		var $this = this;
+        bus.$on('refresh-urls-list', $this.list);
+        $this.list();
+	}
+});
+
+// <mainview/>
+var mainview_data = {};
+Vue.component('mainview', {
+	template: '#mainview-tmpl',
+	data: function(){
+		return mainview_data;
+	}, 
+	methods: {
+	}
+});
+
+// #app!
+var app = new Vue({
+  el: '#app',
+  data: {
+  }
+});
+
+
+</script>
+
+	</body>
+
+</html>
