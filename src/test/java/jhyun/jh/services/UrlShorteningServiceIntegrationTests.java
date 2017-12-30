@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Optional;
+
 import static jhyun.jh.testing_support.TestingFixtures.generateRandomUrl;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,8 +34,8 @@ public class UrlShorteningServiceIntegrationTests {
         val expanded_1 = testSubject.expand(shortened_1);
         val expanded_2 = testSubject.expand(shortened_2);
         assertThat(expanded_1).isNotEqualTo(expanded_2);
-        assertThat(expanded_1).isEqualTo(originalUrl_1);
-        assertThat(expanded_1).isEqualTo(originalUrl_2);
+        assertThat(expanded_1).isEqualTo(Optional.of(originalUrl_1));
+        assertThat(expanded_2).isEqualTo(Optional.of(originalUrl_2));
     }
 
 }
