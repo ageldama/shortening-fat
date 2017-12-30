@@ -1,5 +1,6 @@
 package jhyun.jh.services;
 
+import jhyun.jh.IdCodec;
 import jhyun.jh.storage.entities.Url;
 import jhyun.jh.storage.repositories.UrlRepository;
 import lombok.val;
@@ -12,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
+import static jhyun.jh.IdCodec.encode;
 import static jhyun.jh.testing_support.TestingFixtures.generateRandomUrl;
 import static jhyun.jh.testing_support.TestingFixtures.randomInt;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -46,10 +48,14 @@ public class UrlShorteningServiceSimpleIdCodecImplTests {
 
     @Test
     public void shortenFoundAndOk() {
-        given(urlRepository.findOneByUrl(anyString())).will(invocation -> Url.builder()
-                .id(randomInt())
-                .url(invocation.getArgument(0))
-                .build());
+        given(urlRepository.findOneByUrl(anyString())).will(invocation -> {
+            val id = randomInt();
+            return Url.builder()
+                    .id(id)
+                    .url(invocation.getArgument(0))
+                    .shortenedCode(encode(id))
+                    .build();
+        });
         //
         val givenUrl = generateRandomUrl();
         val shortenedCode = testSubject.shorten(givenUrl);

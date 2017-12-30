@@ -30,12 +30,18 @@ public class Url {
     @Column(name = "url")
     private String url;
 
+    @Getter
+    @Setter
+    @ApiModelProperty(value = "축약코드", required = false)
+    @Column(name = "shortened_code")
+    private String shortenedCode;
+
     public Url() {
     }
 
-    public Url(Integer id, String url) {
+    public Url(Integer id, String url, String shortenedCode) {
         this.id = id;
         this.url = url;
+        this.shortenedCode = shortenedCode;
     }
-
 }

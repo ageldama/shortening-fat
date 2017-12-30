@@ -27,12 +27,11 @@ public class UrlShorteningServiceSimpleIdCodecImpl implements UrlShorteningServi
     }
 
     private String getShortenedCode(final Url url) {
-        val id = url.getId();
-        if (id != null) {
-            return encode(id);
+        if (url.getId() != null && url.getShortenedCode() != null) {
+            return url.getShortenedCode();
         } else {
             throw new RuntimeException(
-                    String.format("Found saved `Url` but without id -- %s", url));
+                    String.format("Found saved `Url` but without id or saved shortened code-- %s", url));
         }
     }
 
@@ -43,9 +42,11 @@ public class UrlShorteningServiceSimpleIdCodecImpl implements UrlShorteningServi
         if (savedUrl != null) {
             return getShortenedCode(savedUrl);
         } else {
-            val it = urlRepository.save(Url.builder().url(url).build());
+            val it = urlRepository.save(Url.builder().url(url).build());    // 1st save to get new-id
+            it.setShortenedCode(encode(it.getId()));
+            urlRepository.save(it);
             if (it != null) {
-                return getShortenedCode(it);
+                return it.getShortenedCode();
             } else {
                 throw new RuntimeException(
                         String.format("Saving new `Url` for %s FAILED", url));
