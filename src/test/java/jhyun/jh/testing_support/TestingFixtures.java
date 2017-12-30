@@ -12,7 +12,7 @@ public final class TestingFixtures {
     private static final Faker faker = new Faker();
 
     public static String generateRandomUrl() {
-        return faker.internet().url();
+        return "http://" + faker.internet().url();
     }
 
     public static String generateRandomShortenedCode() {
