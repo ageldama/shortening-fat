@@ -15,4 +15,7 @@ public final class TestingFixtures {
         return faker.internet().url();
     }
 
+    public static String generateRandomShortenedCode() {
+        return faker.pokemon().name();
+    }
 }

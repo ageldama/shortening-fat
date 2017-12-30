@@ -21,8 +21,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 @RestController
 public class IndexController {
 
-    // TODO: test
-
     private UrlShorteningService urlShorteningService;
     private SavedUrlListingService savedUrlListingService;
 
