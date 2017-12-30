@@ -7,6 +7,7 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public class UrlShorteningServiceSimpleIdCodecImpl implements UrlShorteningServi
         }
     }
 
+    @Transactional
     @Override
     public String shorten(String url) {
         val savedUrl = urlRepository.findOneByUrl(url);
